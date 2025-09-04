@@ -89,7 +89,7 @@ def index(request: Request):
 @app.post("/save")
 def save(
     request: Request,
-    vnc_password: str = Form(""):
+    vnc_password: str = Form(""),
     resolution: str = Form("1920x1080"),
     depth: str = Form("24"),
 ):
@@ -116,6 +116,6 @@ def action(request: Request, action: str = Form(...)):
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=5001)
+    uvicorn.run(app, host="0.0.0.0", port=5001)
 
 
