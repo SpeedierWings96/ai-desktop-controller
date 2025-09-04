@@ -21,6 +21,8 @@ RUN pip install --no-cache-dir -r gui_requirements.txt
 
 COPY host_gui.py /app/host_gui.py
 COPY templates /app/templates
+COPY static /app/static
+COPY static /app/static
 
 EXPOSE 5001
 

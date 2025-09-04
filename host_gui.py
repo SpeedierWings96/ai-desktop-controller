@@ -59,6 +59,7 @@ def get_container_status() -> str:
 app = FastAPI(title="AI Desktop Controller - Host GUI")
 
 templates = Jinja2Templates(directory=str(APP_ROOT / "templates"))
+(APP_ROOT / "static").mkdir(parents=True, exist_ok=True)
 app.mount("/static", StaticFiles(directory=str(APP_ROOT / "static")), name="static")
 
 
