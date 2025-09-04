@@ -67,6 +67,27 @@ docker compose down
 - The container uses TigerVNC + noVNC to expose the Linux desktop.
 - Use the VNC password you set with `VNC_PASSWORD` when prompted in noVNC.
 
+## Optional Host GUI
+A local web GUI is included to simplify setup and control, and embeds the live desktop.
+
+### Run the GUI in Docker (recommended)
+```powershell
+docker compose up -d desktop-gui
+```
+
+Open `http://127.0.0.1:5001`.
+
+From there you can:
+- Save settings (VNC password, resolution)
+- Build/start/restart/stop the container
+- See the live desktop inline (embedded noVNC)
+
+### Run the GUI locally (optional)
+```powershell
+pip install -r gui_requirements.txt
+python host_gui.py
+```
+
 **Real Linux Desktop Automation with OpenAI Integration**
 
 An advanced AI-powered desktop controller that gives OpenAI's GPT-4 Vision the ability to see, understand, and control your actual Linux desktop environment. The AI can take screenshots, analyze what's on screen, click buttons, type text, open applications, and perform complex desktop tasks autonomously.

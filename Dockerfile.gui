@@ -1,0 +1,22 @@
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl ca-certificates git \
+ && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY gui_requirements.txt /app/gui_requirements.txt
+RUN pip install --no-cache-dir -r gui_requirements.txt
+
+COPY host_gui.py /app/host_gui.py
+COPY templates /app/templates
+
+EXPOSE 5001
+
+CMD ["python", "host_gui.py"]
+
+

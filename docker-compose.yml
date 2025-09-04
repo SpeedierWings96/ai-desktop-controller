@@ -17,4 +17,19 @@ services:
       - ./:/app
     restart: unless-stopped
 
+  desktop-gui:
+    build:
+      context: .
+      dockerfile: Dockerfile.gui
+    container_name: desktop-gui
+    environment:
+      - COMPOSE_WORKDIR=/workspace
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./:/workspace
+      - /var/run/docker.sock:/var/run/docker.sock
+      - //./pipe/docker_engine://./pipe/docker_engine
+    restart: unless-stopped
+
 

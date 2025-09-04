@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Desktop Controller - Setup & Control</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 24px; }
+    .row { display: flex; gap: 24px; align-items: flex-start; }
+    .card { border: 1px solid #ddd; border-radius: 8px; padding: 16px; }
+    .card h2 { margin-top: 0; }
+    label { display: block; margin-top: 8px; }
+    input[type="text"], input[type="password"] { width: 100%; padding: 8px; }
+    button { padding: 8px 12px; margin-right: 6px; }
+    iframe { width: 100%; height: 700px; border: 1px solid #ccc; border-radius: 6px; }
+    .status { margin-bottom: 8px; }
+  </style>
+  <script>
+    function confirmAction(formId, message) {
+      if (confirm(message)) {
+        document.getElementById(formId).submit();
+      }
+    }
+  </script>
+  <link rel="icon" href="data:,">
+  <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'self'; default-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-src http://localhost:8080; connect-src 'self';">
+</head>
+<body>
+  <h1>AI Desktop Controller</h1>
+  <div class="row">
+    <div class="card" style="min-width: 320px; max-width: 420px;">
+      <h2>Setup</h2>
+      <div class="status"><strong>Status:</strong> {{ status }}</div>
+      <form method="post" action="/save">
+        <label>VNC Password
+          <input type="password" name="vnc_password" value="{{ vnc_password }}" placeholder="required" />
+        </label>
+        <label>Resolution
+          <input type="text" name="resolution" value="{{ resolution }}" />
+        </label>
+        <label>Color Depth
+          <input type="text" name="depth" value="{{ depth }}" />
+        </label>
+        <div style="margin-top: 12px;">
+          <button type="submit">Save</button>
+        </div>
+      </form>
+
+      <h3>Actions</h3>
+      <form id="buildForm" method="post" action="/action">
+        <input type="hidden" name="action" value="build" />
+      </form>
+      <form id="upForm" method="post" action="/action">
+        <input type="hidden" name="action" value="up" />
+      </form>
+      <form id="downForm" method="post" action="/action">
+        <input type="hidden" name="action" value="down" />
+      </form>
+      <form id="restartForm" method="post" action="/action">
+        <input type="hidden" name="action" value="restart" />
+      </form>
+      <div style="margin-top: 8px;">
+        <button onclick="confirmAction('buildForm','Build the Docker image?')">Build</button>
+        <button onclick="confirmAction('upForm','Start the desktop container?')">Start</button>
+        <button onclick="confirmAction('restartForm','Restart the desktop container?')">Restart</button>
+        <button onclick="confirmAction('downForm','Stop and remove the container?')">Stop</button>
+      </div>
+    </div>
+
+    <div class="card" style="flex: 1;">
+      <h2>Live Desktop</h2>
+      <iframe src="{{ novnc_url }}"></iframe>
+      <p style="margin-top: 8px; font-size: 14px; color: #666;">If the screen is blank, make sure the container is running and the VNC password is set, then click Restart.</p>
+    </div>
+  </div>
+</body>
+</html>
+
+
