@@ -22,6 +22,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     dbus-x11 x11-xserver-utils \
     xdotool wmctrl scrot \
     python3 python3-pip \
+    build-essential gcc g++ make \
+    python3-dev pkg-config meson ninja-build \
+    libdbus-1-dev libglib2.0-dev \
     ca-certificates curl git \
  && rm -rf /var/lib/apt/lists/*
 
