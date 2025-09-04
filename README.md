@@ -1,5 +1,72 @@
 # 🤖 AI Desktop Controller
 
+## Dockerized Linux Desktop with live noVNC view
+
+This app can run inside a container that provides a full Linux desktop (XFCE) accessible via your browser using noVNC, and runs the Python controller app alongside the desktop session.
+
+### Prerequisites
+- Docker and Docker Compose
+
+### Build
+```bash
+docker compose build
+```
+
+### Run
+```bash
+set VNC_PASSWORD=mysafepass  # Windows PowerShell: $env:VNC_PASSWORD="mysafepass"
+docker compose up -d
+```
+
+Then open your browser to `http://localhost:8080` for the live desktop. Raw VNC is available on `localhost:5901`.
+
+Environment variables:
+- `VNC_PASSWORD` (default `changeme`)
+- `RESOLUTION` (default `1920x1080`)
+- `DEPTH` (default `24`)
+
+The application code is mounted into `/app` in the container and started by Supervisor using `python3 run.py` (fallback to `ai_desktop_controller.py`). Modify `supervisord.conf` if you need a different startup.
+
+### Control API
+A FastAPI service runs at `http://localhost:8765` to control the desktop.
+
+Examples (PowerShell):
+```powershell
+# Move mouse to x=400, y=300
+Invoke-RestMethod -Method Post -Uri http://localhost:8765/move -Body (@{x=400;y=300} | ConvertTo-Json) -ContentType 'application/json'
+
+# Click left button
+Invoke-RestMethod -Method Post -Uri http://localhost:8765/click -Body (@{button=1} | ConvertTo-Json) -ContentType 'application/json'
+
+# Type text
+Invoke-RestMethod -Method Post -Uri http://localhost:8765/type -Body (@{text='hello from api'} | ConvertTo-Json) -ContentType 'application/json'
+
+# Press a key (e.g., Super/Windows key)
+Invoke-RestMethod -Method Post -Uri http://localhost:8765/key -Body (@{key='Super_L'} | ConvertTo-Json) -ContentType 'application/json'
+
+# List windows
+Invoke-RestMethod -Method Get -Uri http://localhost:8765/windows
+
+# Activate a window by id
+Invoke-RestMethod -Method Post -Uri http://localhost:8765/activate -Body (@{id='0x04000007'} | ConvertTo-Json) -ContentType 'application/json'
+
+# Get a screenshot (PNG bytes)
+Invoke-WebRequest -Uri http://localhost:8765/screenshot -OutFile screenshot.png
+```
+
+Notes:
+- Keys use xdotool names (e.g., `Return`, `Super_L`, `Ctrl+Alt+t`). Use `xdotool key` chord notation for combos.
+- Window IDs come from `wmctrl -lx` output returned by `/windows`.
+
+### Stop and clean up
+```bash
+docker compose down
+```
+
+### Notes
+- The container uses TigerVNC + noVNC to expose the Linux desktop.
+- Use the VNC password you set with `VNC_PASSWORD` when prompted in noVNC.
+
 **Real Linux Desktop Automation with OpenAI Integration**
 
 An advanced AI-powered desktop controller that gives OpenAI's GPT-4 Vision the ability to see, understand, and control your actual Linux desktop environment. The AI can take screenshots, analyze what's on screen, click buttons, type text, open applications, and perform complex desktop tasks autonomously.

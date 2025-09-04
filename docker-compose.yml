@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  linux-desktop:
+    build: .
+    container_name: linux-desktop
+    ports:
+      - "8080:8080"   # noVNC web
+      - "5901:5901"   # VNC raw
+      - "8765:8765"   # Control API
+    environment:
+      - VNC_PASSWORD=${VNC_PASSWORD:-changeme}
+      - RESOLUTION=${RESOLUTION:-1920x1080}
+      - DEPTH=${DEPTH:-24}
+      - DISPLAY=:1
+    shm_size: 2gb
+    volumes:
+      - ./:/app
+    restart: unless-stopped
+
+
