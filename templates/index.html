@@ -14,6 +14,7 @@
     button { padding: 8px 12px; margin-right: 6px; }
     iframe { width: 100%; height: 700px; border: 1px solid #ccc; border-radius: 6px; }
     .status { margin-bottom: 8px; }
+    #logs { width: 100%; height: 220px; border: 1px solid #ccc; border-radius: 6px; padding: 8px; background: #111; color: #0f0; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; overflow: auto; white-space: pre-wrap; }
   </style>
   <script>
     function confirmAction(formId, message) {
@@ -21,6 +22,28 @@
         document.getElementById(formId).submit();
       }
     }
+    async function refreshStatus() {
+      try {
+        const res = await fetch('/status');
+        const data = await res.json();
+        const statusEl = document.getElementById('desktop-status');
+        if (statusEl) statusEl.textContent = data.desktop || 'unknown';
+      } catch {}
+    }
+    async function refreshLogs() {
+      try {
+        const res = await fetch('/logs');
+        const txt = await res.text();
+        const logs = document.getElementById('logs');
+        if (logs) {
+          const atBottom = Math.abs(logs.scrollHeight - logs.scrollTop - logs.clientHeight) < 8;
+          logs.textContent = txt || '';
+          if (atBottom) logs.scrollTop = logs.scrollHeight;
+        }
+      } catch {}
+    }
+    setInterval(refreshStatus, 1500);
+    setInterval(refreshLogs, 1500);
   </script>
   <link rel="icon" href="data:,">
   <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'self'; default-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-src http://localhost:8080; connect-src 'self';">
@@ -30,7 +53,7 @@
   <div class="row">
     <div class="card" style="min-width: 320px; max-width: 420px;">
       <h2>Setup</h2>
-      <div class="status"><strong>Status:</strong> {{ status }}</div>
+      <div class="status"><strong>Status:</strong> <span id="desktop-status">{{ status }}</span></div>
       <form method="post" action="/save">
         <label>VNC Password
           <input type="password" name="vnc_password" value="{{ vnc_password }}" placeholder="required" />
@@ -71,6 +94,12 @@
       <h2>Live Desktop</h2>
       <iframe src="{{ novnc_url }}"></iframe>
       <p style="margin-top: 8px; font-size: 14px; color: #666;">If the screen is blank, make sure the container is running and the VNC password is set, then click Restart.</p>
+    </div>
+  </div>
+  <div class="row" style="margin-top: 16px;">
+    <div class="card" style="flex: 1;">
+      <h2>Logs</h2>
+      <div id="logs"></div>
     </div>
   </div>
 </body>
