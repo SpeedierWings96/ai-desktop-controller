@@ -1,0 +1,64 @@
+{
+  "openai": {
+    "api_key": "",
+    "model": "gpt-4-vision-preview",
+    "max_tokens": 1000,
+    "temperature": 0.1,
+    "timeout": 30
+  },
+  "desktop": {
+    "screenshot_quality": 85,
+    "max_screenshot_size": [1920, 1080],
+    "click_delay": 0.2,
+    "type_delay": 0.05,
+    "safety_mode": true,
+    "failsafe_enabled": true,
+    "screenshot_interval": 2.0
+  },
+  "ai": {
+    "autonomous_mode": false,
+    "decision_interval": 3.0,
+    "max_thinking_time": 15.0,
+    "confidence_threshold": 0.7,
+    "max_iterations_per_task": 20,
+    "exploration_probability": 0.3
+  },
+  "safety": {
+    "max_actions_per_minute": 25,
+    "restricted_areas": [
+      {"x": 0, "y": 0, "width": 50, "height": 50, "reason": "top-left failsafe corner"}
+    ],
+    "forbidden_applications": [
+      "sudo",
+      "rm",
+      "passwd",
+      "system-settings"
+    ],
+    "require_confirmation": [
+      "shutdown",
+      "reboot",
+      "delete",
+      "format"
+    ]
+  },
+  "logging": {
+    "level": "INFO",
+    "max_log_files": 10,
+    "screenshot_logging": true,
+    "action_logging": true,
+    "ai_response_logging": true
+  },
+  "interface": {
+    "show_mouse_trail": true,
+    "highlight_clicks": true,
+    "show_ai_thinking": true,
+    "voice_feedback": false,
+    "web_interface_port": 8080
+  },
+  "experimental": {
+    "ocr_enabled": true,
+    "object_detection": false,
+    "learning_mode": false,
+    "memory_persistence": true
+  }
+}
